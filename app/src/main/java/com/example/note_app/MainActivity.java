@@ -1,12 +1,17 @@
 package com.example.note_app;
 
+
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -55,9 +60,27 @@ public class MainActivity extends AppCompatActivity {
 
         myListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                myNotes.remove(position);
-                myAdapter.notifyDataSetChanged();
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                new AlertDialog.Builder(getApplicationContext())
+                        .setIcon(android.R.drawable.ic_btn_speak_now)
+                        .setTitle("Delete This Note")
+                        .setMessage("Yes Or No?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                myNotes.remove(position);
+                                myAdapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(MainActivity.this, "Note Not Deleted", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .show();
+
                 //need to google what return condition should be
                 return false;
             }
