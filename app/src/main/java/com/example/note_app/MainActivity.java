@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         setUpListView();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -95,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
                 new AlertDialog.Builder(getApplicationContext())
-                        .setIcon(android.R.drawable.ic_btn_speak_now)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle("Delete This Note")
                         .setMessage("Yes Or No?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -103,6 +102,12 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 myNotes.remove(position);
                                 myAdapter.notifyDataSetChanged();
+
+                                try {
+                                    sharedPreferences.edit().putString("notes", ObjectSerializer.serialize(myNotes)).apply();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -113,8 +118,7 @@ public class MainActivity extends AppCompatActivity {
                         })
                         .show();
 
-                //need to google what return condition should be
-                return false;
+                return true;
             }
         });
     }
