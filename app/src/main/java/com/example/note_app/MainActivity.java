@@ -5,12 +5,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,6 +47,35 @@ public class MainActivity extends AppCompatActivity {
         setUpListView();
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        if(item.getItemId() == R.id.new_note){
+            //0 index in listView is make new note
+            int position = 0;
+            startNoteActivity(position);
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    private void startNoteActivity(int position) {
+        Intent intent = new Intent(getApplicationContext(), MakeNote.class);
+        intent.putExtra(INDEX, position);
+        startActivity(intent);
+    }
+
     private void setUpListView() {
         myNotes.add("add note...");
 
@@ -52,9 +86,7 @@ public class MainActivity extends AppCompatActivity {
         myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), MakeNote.class);
-                intent.putExtra(INDEX, position);
-                startActivity(intent);
+                startNoteActivity(position);
             }
         });
 
